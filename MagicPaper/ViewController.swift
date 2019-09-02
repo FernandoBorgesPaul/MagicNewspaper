@@ -37,6 +37,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
             configuration.maximumNumberOfTrackedImages = 1 // Configures the numbers of pictures it will track, in this case,1.
             
+            
+            
+            print("Images found!")
+            
         }
 
         // Run the view's session
@@ -52,27 +56,32 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
     // MARK: - ARSCNViewDelegate
     
-/*
-    // Override to create and configure nodes for anchors added to the view's session.
+    
+    //This method generates the rectangle that will anchor the image taht we want to capture. Rendering this, we can detect
+    // the rectagle space from pour picture.
+    
     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
+        
         let node = SCNNode()
-     
+        
+        if let imageAnchor = anchor as? ARImageAnchor {
+            
+            // This plane will get the same measure as the actual size from the physical picture
+            let plane = SCNPlane(width: imageAnchor.referenceImage.physicalSize.width, height:   imageAnchor.referenceImage.physicalSize.height)
+            
+            //this will get the actual colour from the rectangle, it will be white.
+            plane.firstMaterial?.diffuse.contents = UIColor(white: 1.0, alpha: 0.5)
+            
+            //The plane node will get the rectagle figure
+            let planeNode = SCNNode(geometry: plane)
+            
+            planeNode.eulerAngles.x = -.pi / 2
+            
+            node.addChildNode(planeNode)
+  
+        }
+        
         return node
     }
-*/
-    
-    func session(_ session: ARSession, didFailWithError error: Error) {
-        // Present an error message to the user
-        
-    }
-    
-    func sessionWasInterrupted(_ session: ARSession) {
-        // Inform the user that the session has been interrupted, for example, by presenting an overlay
-        
-    }
-    
-    func sessionInterruptionEnded(_ session: ARSession) {
-        // Reset tracking and/or remove existing anchors if consistent tracking is required
-        
-    }
+
 }
