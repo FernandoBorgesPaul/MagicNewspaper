@@ -66,11 +66,24 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         if let imageAnchor = anchor as? ARImageAnchor {
             
+            let videoNode = SKVideoNode(fileNamed: "g7amazon.mp4")  // This video Node will be initialized using the
+                                                                    // actual video from our bundle
+            
+            videoNode.play()  // Will play the video automatically
+            
+            let videoScene = SKScene(size: CGSize(width: 480, height: 360))
+            // The video will take the actual center position from the video Scene
+            videoNode.position = CGPoint(x: videoScene.size.width / 2, y: videoScene.size.height / 2)
+            
+            videoNode.yScale = -1.0 // It will reverse the image to make it flip in the y axis.
+            
+            videoScene.addChild(videoNode)
+            
             // This plane will get the same measure as the actual size from the physical picture
             let plane = SCNPlane(width: imageAnchor.referenceImage.physicalSize.width, height:   imageAnchor.referenceImage.physicalSize.height)
             
-            //this will get the actual colour from the rectangle, it will be white.
-            plane.firstMaterial?.diffuse.contents = UIColor(white: 1.0, alpha: 0.5)
+            
+            plane.firstMaterial?.diffuse.contents = videoScene
             
             //The plane node will get the rectagle figure
             let planeNode = SCNNode(geometry: plane)
